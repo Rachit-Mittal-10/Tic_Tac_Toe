@@ -20,7 +20,7 @@ body{
     justify-content: center;
     align-items: center;
     color: white;
-    background-color: black;
+    background-color: rgb(29, 29, 29);
     padding: 20px 10px 20px 10px;
 }
 
@@ -35,7 +35,7 @@ body{
     left: 0px;
     right: 0px;
     color: white;
-    background-color: black;
+    background-color: rgb(29, 29, 29);
     padding: 20px 10px 20px 10px;
 }
 
@@ -48,7 +48,7 @@ body{
     flex-direction: row;
 }
 
-.main .board-container{
+.main #board-container{
     display: grid;
     grid-template-columns: repeat(3,1fr);
     grid-template-rows: repeat(3,1fr);
@@ -56,16 +56,19 @@ body{
     width: 60%;
 }
 
-.main .board-container button{
+.main #board-container button{
     border: solid 2px black;
     width: 100%;
     height: 100%;
 }
 
-.main .left-panel,
-.main .right-panel{
+.main #board-container button:hover{  
+    background-color: rgb(200, 200, 200);
+}
+
+.main .panel{
     height: 100%;
     width: 20%;
     color: white;
-    background-color: black;
+    background-color: rgb(29, 29, 29);
 }
