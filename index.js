@@ -2,6 +2,7 @@
 Following is the logic behind Tic Tac Toe
 */
 // This would create the Gameboard
+
 const Gameboard = function(){
     let gameboard = [
         ["","",""],
@@ -28,16 +29,8 @@ const Gameboard = function(){
 };
 
 // This includes the utility functions
-let utilities = function(Gameboard,winHook){
-    let displayBoard = function(){
-        let board = Gameboard.getBoard();
-        console.log(board);
-    }
-    let getInput = function(){
-        let row = prompt("Enter the Row Number(0-2): ");
-        let col = prompt("Enter the Column Number(0-2):");
-        return {row,col}
-    }
+let utilities = function(Gameboard,winHook,chanceHook){
+    
     let analyseRow = function(row){
         let board = Gameboard.getBoard();
         let status = true;
@@ -90,21 +83,47 @@ let utilities = function(Gameboard,winHook){
         return false;
     }
     let play = function(player){
-        return () => {
-            console.log(`Player ${player} turn`);
-            input = getInput();
-            Gameboard.playMove(input.row, input.col,player);
+        return (row,col) => {
+            Gameboard.playMove(row,col,player);
             if(analyseBoard()){
-                console.log(`Player ${player} Won`);
                 winHook.toggleStatus();
+                winHook.afterMathWin();
+            }
+            chanceHook.toggleStatus();
+        }
+    }
+    return {
+        play
+    };
+};
+
+let utilitiesDOM = function(Gameboard,chanceHook,playX, playO){
+    const board_container = document.getElementById("board-container");
+    let makeBoardDOM = function(){
+        for(let i=0;i<3;i++){
+            for(let j=0;j<3;j++){
+                let button = document.createElement("button");
+                board_container.appendChild(button);
+                button.addEventListener("click",()=>{
+                    if(Gameboard.getBoard()[i][j] === ""){
+                        let player = chanceHook.getStatus() ? "X": "O";
+                        if(player === "X"){
+                            playX(i,j);
+                        }
+                        else if(player === "O"){
+                            playO(i,j);
+                        }
+                        button.innerHTML = player;
+                        button.disabled = true;
+                    }
+                });
             }
         }
     }
     return {
-        displayBoard,
-        play
-    };
-};
+        makeBoardDOM
+    }
+}
 
 // This creates the code to manage the turns in separate closure environment
 let hook = function(s){
@@ -123,29 +142,21 @@ let hook = function(s){
 
 // This is the driver code putting all of it together
 const startGame = function(){
-    alert("State at Start of Game");
     let board = Gameboard();
     let win = hook(false);
+    win.afterMathWin = function(){
+        let buttons = document.getElementsByTagName("button");
+        for(let button of buttons){
+            button.disabled = true;
+        }
+    }
     let chanceX = hook(true);
-    let util = utilities(board,win);
+    let util = utilities(board,win,chanceX);
     let playX =  util.play("X");
     let playO = util.play("O");
-    let interval = setInterval(()=>{
-        util.displayBoard();
-        if(chanceX.getStatus()){
-            playX();
-        }
-        else{
-            playO();
-        }
-        chanceX.toggleStatus();
-        if(win.getStatus()){
-            clearInterval(interval);
-        }
-    },50);
+    let utilDOM = utilitiesDOM(board,chanceX,playX,playO);
+    utilDOM.makeBoardDOM();
+    console.log(document.body);
 };
 
-
-// Here I will only write the front-end part
-board_container = document.getElementsByID("board-container");
-
+document.addEventListener("DOMContentLoaded",startGame);
