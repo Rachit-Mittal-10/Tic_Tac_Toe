@@ -143,5 +143,6 @@ const startGame = function(){
             clearInterval(interval);
         }
     },50);
-}();
+};
 
+export {startGame};
