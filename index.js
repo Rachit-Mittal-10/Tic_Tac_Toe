@@ -105,17 +105,15 @@ let utilitiesDOM = function(Gameboard,chanceHook,playX, playO){
                 let button = document.createElement("button");
                 board_container.appendChild(button);
                 button.addEventListener("click",()=>{
-                    if(Gameboard.getBoard()[i][j] === ""){
-                        let player = chanceHook.getStatus() ? "X": "O";
-                        if(player === "X"){
-                            playX(i,j);
-                        }
-                        else if(player === "O"){
-                            playO(i,j);
-                        }
-                        button.innerHTML = player;
-                        button.disabled = true;
+                    let player = chanceHook.getStatus() ? "X": "O";
+                    if(player === "X"){
+                        playX(i,j);
                     }
+                    else if(player === "O"){
+                        playO(i,j);
+                    }
+                    button.innerHTML = player;
+                    button.disabled = true;
                 });
             }
         }
